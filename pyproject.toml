@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "railbound"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "cromarmot", email = "yexiaorain@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = ["pydantic"]
+
+[project.urls]
+Documentation = "https://github.com/cromarmot/railbound#readme"
+Issues = "https://github.com/cromarmot/railbound/issues"
+Source = "https://github.com/cromarmot/railbound"
+
+[tool.hatch.version]
+path = "src/railbound/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/railbound tests}"
+
+[tool.coverage.run]
+source_pkgs = ["railbound", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/railbound/__about__.py",
+]
+
+[tool.coverage.paths]
+railbound = ["src/railbound", "*/railbound/src/railbound"]
+tests = ["tests", "*/railbound/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
