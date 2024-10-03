@@ -106,13 +106,15 @@ def dump_g(g: GAME_MAP):
         Direction.Down: [2, 1],
     }
     for row in g:
-        G: List[str] = ["" for i in range(3)]
+        G: List[str] = ["" for i in range(4)]
         for b in row:
-            ch = [["." for i in range(3)] for j in range(3)]
+            ch = [[" " for i in range(4)] for j in range(4)]
             if b.t == BlockEnum.Empty:
-                ch = [[" " for i in range(3)] for j in range(3)]
+                ch = [[" " for i in range(4)] for j in range(4)]
             elif b.t == BlockEnum.Block:
-                ch = [["X" for i in range(3)] for j in range(3)]
+                for i in range(3):
+                    for j in range(3):
+                        ch[i][j] = "X"
             elif b.t == BlockEnum.Out:
                 i, j = urdl2ij[b.entry[0]]
                 ch[i][j] = "O"
@@ -153,9 +155,9 @@ def dump(g: GAME_MAP, trains: List[Train]):
     for row in M:
         for n, d in row:
             if n == -1:
-                print("__ ", end="")
+                print(" __ ", end="")
             else:
-                print(f"{n}{d2graphic[d]} ", end="")
+                print(f" {n}{d2graphic[d]} ", end="")
         print()
     print()
 
@@ -170,9 +172,6 @@ def run(g: GAME_MAP, trains: List[Train], wait_train: int) -> bool:
             # logger.exception(e)
             return False
         if n_c == len(trains):
-            print("===== Found =====")
-            dump(n_g, n_t)
-            print("===== Found =====")
             return True
         g, trains, wait_train = n_g, n_t, n_c
         # dump(g, trains)
@@ -242,7 +241,12 @@ def solve(g: GAME_MAP, trains: List[Train], left: int):
             # print("Before run")
             try_cnt += 1
             print(f"try_cnt = {try_cnt}")
-            return run(d_g, d_t, 0)
+            found = run(d_g, d_t, 0)
+            if found:
+                print("===== Found =====")
+                dump_g(d_g)
+                print("===== Found =====")
+            return found
 
         for i in range(len(d_g)):
             for j in range(len(d_g[i])):
